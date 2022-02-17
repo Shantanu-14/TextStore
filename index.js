@@ -17,6 +17,6 @@ app.use(cors());
 app.use(express.json());
 app.use("/api", dataRoute);
 
-app.listen(9000, () => {
+app.listen(9000 || process.env.PORT, () => {
   console.log("backend server is running!");
 });
