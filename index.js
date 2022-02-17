@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const { MONGO_URI } = require("./config/keys");
 const cors = require("cors");
 const dataRoute = require("./routes/data");
-const PORT= 9000 || process.env.PORT
+const PORT= process.env.PORT
 console.log(PORT);
 mongoose
   .connect(MONGO_URI, {
