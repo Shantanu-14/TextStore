@@ -4,8 +4,7 @@ const mongoose = require("mongoose");
 const { MONGO_URI } = require("./config/keys");
 const cors = require("cors");
 const dataRoute = require("./routes/data");
-const PORT= process.env.PORT
-console.log(PORT);
+const PORT= process.env.PORT || 5000;
 mongoose
   .connect(MONGO_URI, {
     useNewUrlParser: true,
@@ -19,5 +18,9 @@ app.use(express.json());
 app.use("/api", dataRoute);
 
 app.listen(PORT, () => {
-  console.log("backend server is running!");
+  console.log("Backend server is running on Port:",PORT);
+});
+
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Backend server for TextStore" });
 });
