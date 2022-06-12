@@ -131,4 +131,16 @@ router.get("/getNumberOfFiles", (req, res) => {
   });
 });
 
+router.get("/getNumberOfUntitledFiles", (req, res) => {
+  Data.countDocuments({ name: { $regex: '.*' + "Untitled" + '.*' } }).exec((err, count) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({ error: "Something went wrong!" });
+    } else {
+      res.json({ count });
+    }
+  });
+}
+);
+
 module.exports = router;
