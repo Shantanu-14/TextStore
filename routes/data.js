@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const Data = require("../models/data");
+var CryptoJS = require("crypto-js");
 
 router.get("/", (req, res) => {
   res.status(200).json({ message: "Backend server for TextStore" });
@@ -46,7 +47,7 @@ router.get("/showAllData", (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json({ error  : "Something went wrong!" });
+      res.status(500).json({ error: "Something went wrong!" });
     });
 });
 
@@ -132,14 +133,36 @@ router.get("/getNumberOfFiles", (req, res) => {
 });
 
 router.get("/getNumberOfUntitledFiles", (req, res) => {
-  Data.countDocuments({ name: { $regex: '.*' + "Untitled" + '.*' } }).exec((err, count) => {
-    if (err) {
-      console.log(err);
-      res.status(500).json({ error: "Something went wrong!" });
-    } else {
-      res.json({ count });
+  Data.countDocuments({ name: { $regex: ".*" + "Untitled" + ".*" } }).exec(
+    (err, count) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ error: "Something went wrong!" });
+      } else {
+        res.json({ count });
+      }
     }
-  });
+  );
+});
+
+//encrypt data
+router.post("/encryptData", (req, res) => {
+  const { data, key } = req.body;
+  const encryptedData = CryptoJS.AES.encrypt(data, key).toString();
+  res.json({ encryptedData });
+});
+
+//decrypt data
+router.post("/decryptData", (req, res) => {
+  const { data, key } = req.body;
+  try{
+    const decryptedData = CryptoJS.AES.decrypt(data, key).toString(
+      CryptoJS.enc.Utf8
+    );
+    res.json({ decryptedData });
+  }catch(err){
+    res.json({ error: "Invalid key" });
+  }
 }
 );
 
